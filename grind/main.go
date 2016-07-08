@@ -118,13 +118,20 @@ func main() {
 }
 
 func CommandInit(cmd *cobra.Command, args []string) {
+	mustLoadConfig(cmd)
+
+	var loadedHost string
+	loadedHost = defaultHost
+	if Config.Host != "" {
+		loadedHost = Config.Host
+	}
 	fmt.Println(
 		`Please follow these steps:
 
 1.  Use Canvas to load a CodeGrinder window
 2.  Open a new tab in your browser and copy this URL into the address bar:
 
-    https://` + defaultHost + `/v2/users/me/cookie
+    https://` + loadedHost + `/v2/users/me/cookie
 
 3.  The browser will display something of the form: ` + CookieName + `=...
 4.  Copy that entire string to the clipboard and paste it below.
@@ -145,7 +152,7 @@ Paste here: `)
 
 	// set up config
 	Config.Cookie = cookie
-	Config.Host = defaultHost
+	Config.Host = loadedHost
 
 	// see if they need an upgrade
 	checkVersion()
